@@ -2,39 +2,21 @@ package main
 
 import (
 	"fmt"
-	"strconv"
 )
 
 func main() {
-
-	fmt.Println(Persistence(0))
+	busStops := [][2]int{
+		{3, 0}, // На остановку зашли 3, вышли 0
+		{2, 1}, // На остановку зашли 2, вышли 1
+		{1, 2}, // На остановку зашли 1, вышли 2
+	}
+	fmt.Println(Number(busStops))
 }
-
-func Persistence(n int) int {
-	// Базовый случай: если число уже однозначное
-	if n < 10 {
-		return 0
+func Number(busStops [][2]int) int {
+	passagire := 0
+	for _, stop := range busStops {
+		passagire += stop[0] - stop[1]
 	}
 
-	counter := 0
-	current := n
-
-	for current >= 10 {
-		current = multiplyDigits(current)
-		counter++
-	}
-
-	return counter
-}
-
-func multiplyDigits(n int) int {
-	str := strconv.Itoa(n)
-	product := 1
-
-	for i := 0; i < len(str); i++ {
-		digit, _ := strconv.Atoi(string(str[i]))
-		product *= digit
-	}
-
-	return product
+	return passagire
 }
