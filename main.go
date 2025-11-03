@@ -5,18 +5,24 @@ import (
 )
 
 func main() {
-	busStops := [][2]int{
-		{3, 0}, // На остановку зашли 3, вышли 0
-		{2, 1}, // На остановку зашли 2, вышли 1
-		{1, 2}, // На остановку зашли 1, вышли 2
-	}
-	fmt.Println(Number(busStops))
+	nums := []int{3, 3, 3}
+	target := 6
+	fmt.Println(twoSum(nums, target))
 }
-func Number(busStops [][2]int) int {
-	passagire := 0
-	for _, stop := range busStops {
-		passagire += stop[0] - stop[1]
-	}
+func twoSum(nums []int, target int) []int {
+	searchTarget := make(map[int]int, 0)
+	var difference int
+	for i, v := range nums {
+		difference = target - v
+		if difference < 0 {
+			continue
+		}
+		valueMap, ok := searchTarget[difference]
+		if ok {
+			return []int{valueMap, i}
+		}
+		searchTarget[v] = i
 
-	return passagire
+	}
+	return []int{0, 0}
 }
