@@ -2,22 +2,39 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 )
 
 func main() {
 
-	fmt.Println(MultiTable(5))
+	fmt.Println(Persistence(0))
 }
-func MultiTable(number int) string {
-	//good luck
-	result := ""
-	for i := 1; i <= 10; i++ {
-		if i < 10 {
-			result += fmt.Sprintf("%d * %d = %d\n", i, number, i*number)
-		} else {
-			result += fmt.Sprintf("%d * %d = %d", i, number, i*number)
-		}
-	}
-	return result
 
+func Persistence(n int) int {
+	// Базовый случай: если число уже однозначное
+	if n < 10 {
+		return 0
+	}
+
+	counter := 0
+	current := n
+
+	for current >= 10 {
+		current = multiplyDigits(current)
+		counter++
+	}
+
+	return counter
+}
+
+func multiplyDigits(n int) int {
+	str := strconv.Itoa(n)
+	product := 1
+
+	for i := 0; i < len(str); i++ {
+		digit, _ := strconv.Atoi(string(str[i]))
+		product *= digit
+	}
+
+	return product
 }
