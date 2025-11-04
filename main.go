@@ -3,25 +3,34 @@ package main
 import "fmt"
 
 func main() {
-	num := 123532
-	fmt.Println(isPalindrome(num))
-}
-func isPalindrome(x int) bool {
-	// Проверить отрицательные числа - если число отрицательное, сразу вернуть false
-	if x < 0 {
-		return false
-	}
-	// Создаем реверсивное чило
-	rev := reverseHalfNumber(x)
-	// Сравноваем иходное число с реверсивным
-	return rev == x
+	romNums := "III"
+	fmt.Println(romanToInt(romNums))
 }
 
-func reverseHalfNumber(n int) int {
-	reversed := 0
-	for n > 0 {
-		reversed = reversed*10 + n%10
-		n = n / 10
+func romanToInt(s string) int {
+	if len(s) == 0 {
+		return 0
+	} // Создали мару для хранения римских чисел
+	romanMap := map[byte]int{
+		'I': 1,
+		'V': 5,
+		'X': 10,
+		'L': 50,
+		'C': 100,
+		'D': 500,
+		'M': 1000,
 	}
-	return reversed
+	result := 0
+	for i := 0; i < len(s); i++ {
+		current, ok := romanMap[s[i]]
+		if !ok {
+			return 0
+		}
+		if i < len(s)-1 && current < romanMap[s[i+1]] {
+			result -= current
+		} else {
+			result += current
+		}
+	}
+	return result
 }
