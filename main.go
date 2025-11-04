@@ -1,28 +1,27 @@
 package main
 
-import (
-	"fmt"
-)
+import "fmt"
 
 func main() {
-	nums := []int{3, 3, 3}
-	target := 6
-	fmt.Println(twoSum(nums, target))
+	num := 123532
+	fmt.Println(isPalindrome(num))
 }
-func twoSum(nums []int, target int) []int {
-	searchTarget := make(map[int]int, 0)
-	var difference int
-	for i, v := range nums {
-		difference = target - v
-		if difference < 0 {
-			continue
-		}
-		valueMap, ok := searchTarget[difference]
-		if ok {
-			return []int{valueMap, i}
-		}
-		searchTarget[v] = i
-
+func isPalindrome(x int) bool {
+	// Проверить отрицательные числа - если число отрицательное, сразу вернуть false
+	if x < 0 {
+		return false
 	}
-	return []int{0, 0}
+	// Создаем реверсивное чило
+	rev := reverseHalfNumber(x)
+	// Сравноваем иходное число с реверсивным
+	return rev == x
+}
+
+func reverseHalfNumber(n int) int {
+	reversed := 0
+	for n > 0 {
+		reversed = reversed*10 + n%10
+		n = n / 10
+	}
+	return reversed
 }
