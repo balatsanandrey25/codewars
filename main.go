@@ -1,36 +1,105 @@
 package main
 
-import "fmt"
+import (
+	"bytes"
+	"fmt"
+	"strconv"
+)
 
-func main() {
-	romNums := "III"
-	fmt.Println(romanToInt(romNums))
+type Node struct {
+	data int
+	next *Node
+}
+type LinkedList struct {
+	head *Node
 }
 
-func romanToInt(s string) int {
-	if len(s) == 0 {
-		return 0
-	} // Создали мару для хранения римских чисел
-	romanMap := map[byte]int{
-		'I': 1,
-		'V': 5,
-		'X': 10,
-		'L': 50,
-		'C': 100,
-		'D': 500,
-		'M': 1000,
+func newNode(data int) *Node {
+	return &Node{data: data, next: nil}
+}
+func (ll *LinkedList) append(data int) {
+	newNode := newNode(data)
+
+	if ll.head == nil {
+		ll.head = newNode
+		return
 	}
-	result := 0
-	for i := 0; i < len(s); i++ {
-		current, ok := romanMap[s[i]]
-		if !ok {
-			return 0
-		}
-		if i < len(s)-1 && current < romanMap[s[i+1]] {
-			result -= current
-		} else {
-			result += current
-		}
+
+	current := ll.head
+	for current.next != nil {
+		current = current.next
 	}
-	return result
+	current.next = newNode
+}
+func (ll *LinkedList) display() {
+	current := ll.head
+	for current != nil {
+		fmt.Printf("%d -> ", current.data)
+		current = current.next
+	}
+	fmt.Println("nil")
+}
+func main() {
+	list6 := &LinkedList{
+		head: &Node{
+			data: 1,
+			next: &Node{data: 0, next: &Node{data: 0, next: &Node{data: 1,
+				next: nil}}}},
+	}
+
+	// Второй такой же список
+	list7 := &LinkedList{
+		head: &Node{
+			data: 1,
+			next: &Node{data: 2, next: &Node{data: 2, next: &Node{data: 0,
+				next: nil}}}},
+	}
+	addTwoNumbers(list6, list7).display()
+}
+func addTwoNumbers(l1 *LinkedList, l2 *LinkedList) *LinkedList {
+	i1, err := collectorNums(l1)
+	if err != nil {
+		return &LinkedList{
+			head: &Node{
+				data: 0,
+				next: nil,
+			}}
+	}
+	i2, err := collectorNums(l2)
+	if err != nil {
+		return &LinkedList{
+			head: &Node{
+				data: 0,
+				next: nil,
+			}}
+	}
+
+	totalSumStr := strconv.Itoa(i1 + i2)
+	newLinkedList := &LinkedList{}
+	for _, v := range totalSumStr {
+		tempInt, _ := strconv.Atoi(string(v))
+		newLinkedList.append(tempInt)
+	}
+
+	return newLinkedList
+}
+func collectorNums(list *LinkedList) (int, error) {
+	result := make([]int, 0)
+	current := list.head
+	for current.next != nil {
+		result = append(result, current.data)
+		current = current.next
+	}
+	result = append(result, current.data)
+	var buffer bytes.Buffer
+	for _, num := range result {
+		buffer.WriteString(strconv.Itoa(num))
+	}
+
+	str := buffer.String()
+	resInt, err := strconv.Atoi(str)
+	if err != nil {
+		return 0, err
+	}
+	return resInt, nil
 }
