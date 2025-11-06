@@ -1,105 +1,53 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
-	"strconv"
+	"sort"
 )
 
-type Node struct {
-	data int
-	next *Node
-}
-type LinkedList struct {
-	head *Node
-}
-
-func newNode(data int) *Node {
-	return &Node{data: data, next: nil}
-}
-func (ll *LinkedList) append(data int) {
-	newNode := newNode(data)
-
-	if ll.head == nil {
-		ll.head = newNode
-		return
-	}
-
-	current := ll.head
-	for current.next != nil {
-		current = current.next
-	}
-	current.next = newNode
-}
-func (ll *LinkedList) display() {
-	current := ll.head
-	for current != nil {
-		fmt.Printf("%d -> ", current.data)
-		current = current.next
-	}
-	fmt.Println("nil")
-}
 func main() {
-	list6 := &LinkedList{
-		head: &Node{
-			data: 1,
-			next: &Node{data: 0, next: &Node{data: 0, next: &Node{data: 1,
-				next: nil}}}},
-	}
-
-	// Второй такой же список
-	list7 := &LinkedList{
-		head: &Node{
-			data: 1,
-			next: &Node{data: 2, next: &Node{data: 2, next: &Node{data: 0,
-				next: nil}}}},
-	}
-	addTwoNumbers(list6, list7).display()
+	ln1 := []int{1, 2, 3, 4}
+	ln2 := []int{1}
+	fmt.Println(findMedianSortedArrays(ln1, ln2))
 }
-func addTwoNumbers(l1 *LinkedList, l2 *LinkedList) *LinkedList {
-	i1, err := collectorNums(l1)
-	if err != nil {
-		return &LinkedList{
-			head: &Node{
-				data: 0,
-				next: nil,
-			}}
+
+func findMedianSortedArrays(nums1 []int, nums2 []int) float64 {
+	if len(nums1) == 0 && len(nums2) == 0 {
+		return float64(0)
 	}
-	i2, err := collectorNums(l2)
-	if err != nil {
-		return &LinkedList{
-			head: &Node{
-				data: 0,
-				next: nil,
-			}}
+	if len(nums2) == 0 {
+
+		return getMidle(nums1)
+	}
+	if len(nums1) == 0 {
+
+		return getMidle(nums2)
 	}
 
-	totalSumStr := strconv.Itoa(i1 + i2)
-	newLinkedList := &LinkedList{}
-	for _, v := range totalSumStr {
-		tempInt, _ := strconv.Atoi(string(v))
-		newLinkedList.append(tempInt)
+	p1, n1 := nums1[0], nums1[len(nums1)-1]
+	p2, n2 := nums2[0], nums2[len(nums2)-1]
+
+	if n1 <= p2 {
+		return getMidle(append(nums1, nums2...))
+	}
+	if n2 <= p1 {
+		return getMidle(append(nums2, nums1...))
 	}
 
-	return newLinkedList
+	sliceRes := append(nums1, nums2...)
+	sort.Ints(sliceRes)
+	return getMidle(sliceRes)
 }
-func collectorNums(list *LinkedList) (int, error) {
-	result := make([]int, 0)
-	current := list.head
-	for current.next != nil {
-		result = append(result, current.data)
-		current = current.next
-	}
-	result = append(result, current.data)
-	var buffer bytes.Buffer
-	for _, num := range result {
-		buffer.WriteString(strconv.Itoa(num))
-	}
 
-	str := buffer.String()
-	resInt, err := strconv.Atoi(str)
-	if err != nil {
-		return 0, err
+// Функция выдает середину слайса
+func getMidle(slice []int) float64 {
+	lenS := len(slice)
+	if lenS == 1 {
+		return float64(slice[0])
 	}
-	return resInt, nil
+	mid := lenS / 2
+	if lenS%2 == 0 {
+		return float64(slice[mid-1]+slice[mid]) / 2.0
+	}
+	return float64(slice[mid])
 }
