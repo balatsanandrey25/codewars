@@ -1,73 +1,30 @@
 package main
 
-import (
-	"context"
-	"fmt"
-	"math/rand"
-	"sync"
-	"time"
-)
-
-func processData(ctx context.Context, val int) int {
-	ch := make(chan struct{})
-	go func() {
-		time.Sleep(time.Duration(rand.Intn(10)) * time.Second)
-		close(ch)
-	}()
-	select {
-	case <-ch:
-		return val * 2
-	case <-ctx.Done():
-		return -1
-	}
-}
-
 func main() {
-	ctx, cancle := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancle()
-	in := make(chan int)
-	out := make(chan int)
-
-	go func() {
-		defer close(in)
-		for i := range 10 {
-			in <- i + 1
-		}
-
-		select {
-		case <-in:
-		case <-ctx.Done():
-			return
-		}
-	}()
-	now := time.Now()
-	processParallel(ctx, in, out, 5)
-
-	for val := range out {
-		fmt.Println(val)
-	}
-	fmt.Println(time.Since(now))
+	nums1 := []int{1, 2, 2, 0, 0, 0}
+	m := 3
+	nums2 := []int{2, 2, 6}
+	n := 3
+	merge(nums1, m, nums2, n)
 }
-
-// Операция не должна выполняться не более 5 сек
-func processParallel(ctx context.Context, in <-chan int, out chan<- int, numWorkers int) {
-	wg := sync.WaitGroup{}
-	for range numWorkers {
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-			for v := range in {
-				select {
-				case out <- processData(ctx, v):
-				case <-ctx.Done():
-					return
-				}
-			}
-		}()
-
+func merge(nums1 []int, m int, nums2 []int, n int) {
+	f1 := m - 1
+	f2 := n - 1
+	full := m + n - 1
+	for f1 >= 0 && f2 >= 0 {
+		if nums1[f1] >= nums2[f2] {
+			nums1[full] = nums1[f1]
+			f1--
+		} else {
+			nums1[full] = nums2[f2]
+			f2--
+		}
+		full--
 	}
-	go func() {
-		wg.Wait()
-		close(out)
-	}()
+	for f2 >= 0 {
+		nums1[full] = nums2[f2]
+		f2--
+		full--
+	}
+
 }
