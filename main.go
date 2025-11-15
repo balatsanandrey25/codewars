@@ -1,28 +1,36 @@
 package main
 
 import (
+	"context"
+	"errors"
 	"fmt"
-	"sync"
-	"sync/atomic"
+	"math/rand"
+	"time"
 )
 
-func main() {
-	wg := sync.WaitGroup{}
-	// mu := sync.Mutex{}
-	var counter int64 = 0
-	// or
-	// counter := 0
-	for i := 1; i <= 1000; i++ {
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-			// defer mu.Unlock()
-			// mu.Lock()
-			atomic.AddInt64(&counter, 1)
-			// counter++
-		}()
+func unpredictableFunc() int {
+	n := rand.Intn(40)
+	fmt.Println(n)
+	time.Sleep(time.Duration(n) * time.Second)
+	return n
+}
+func predictableFunc(ctx context.Context) (int, error) {
+	c, _ := context.WithTimeout(ctx, 5*time.Second)
+	ch := make(chan struct{})
+	var result int
+	go func() {
+		result = unpredictableFunc()
+		close(ch)
+	}()
+	select {
+	case <-c.Done():
+		return -1, errors.New("Функция работает более 5 секунд")
+	case <-ch:
+		return result, nil
 	}
-	wg.Wait()
-	fmt.Println(counter)
 
+}
+func main() {
+	v, e := predictableFunc(context.Background())
+	fmt.Println(v, e)
 }
