@@ -1,28 +1,44 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"sort"
+)
 
-func isAnagram(s string, t string) bool {
-	if len(s) != len(t) {
-		return false
+func groupAnagrams(strs []string) [][]string {
+	anagramMap := make(map[string][]string)
+
+	for _, str := range strs {
+		// Преобразуем строку в срез рун для сортировки
+		runes := []rune(str)
+		sort.Slice(runes, func(i, j int) bool {
+			return runes[i] < runes[j]
+		})
+		sortedStr := string(runes)
+
+		// Добавляем исходную строку в группу анаграмм
+		anagramMap[sortedStr] = append(anagramMap[sortedStr], str)
+		fmt.Println("sortedStr:", sortedStr, ";", str)
 	}
-	charCount := make(map[rune]int)
-	// Заполняем map символами из первой строки
-	for _, char := range s {
-		charCount[char]++
+
+	// Преобразуем map в срез срезов
+	result := make([][]string, 0, len(anagramMap))
+	for _, group := range anagramMap {
+		result = append(result, group)
 	}
-	// Проверяем вторую строку
-	for _, char := range t {
-		charCount[char]--
-		if charCount[char] < 0 {
-			return false
-		}
-	}
-	return true
+
+	return result
 }
-
 func main() {
-	s := "jam" //r2 a2 c2 e1
-	t := "jar" //
-	fmt.Println(isAnagram(s, t))
+	// Тестовые примеры
+	testCases := [][]string{
+		{"eat", "tea", "tan", "ate", "nat", "bat"},
+		{""},
+		{"a"},
+		{"stop", "pots", "tops", "opts", "post"},
+	}
+
+	for _, strs := range testCases {
+		_ = groupAnagrams(strs)
+	}
 }
