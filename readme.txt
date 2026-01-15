@@ -1,26 +1,13 @@
-Group Anagrams
 
-Given an array of strings strs, group all anagrams together into sublists. You may return the output in any order.
+Find the odd int https://www.codewars.com/kata/54da5a58ea159efa38000836/train/go
 
-An anagram is a string that contains the exact same characters as another string, but the order of the characters can be different.
+Given an array of integers, find the one that appears an odd number of times.
 
-Example 1:
+There will always be only one integer that appears an odd number of times.
 
-Input: strs = ["act","pots","tops","cat","stop","hat"]
-
-Output: [["hat"],["act", "cat"],["stop", "pots", "tops"]]
-Example 2:
-
-Input: strs = ["x"]
-
-Output: [["x"]]
-Example 3:
-
-Input: strs = [""]
-
-Output: [[""]]
-Constraints:
-
-1 <= strs.length <= 1000.
-0 <= strs[i].length <= 100
-strs[i] is made up of lowercase English letters.
+Examples
+[7] should return 7, because it occurs 1 time (which is odd).
+[0] should return 0, because it occurs 1 time (which is odd).
+[1,1,2] should return 2, because it occurs 1 time (which is odd).
+[0,1,0,1,0] should return 0, because it occurs 3 times (which is odd).
+[1,2,2,3,3,3,4,3,3,3,2,2,1] should return 4, because it appears 1 time (which is odd).
