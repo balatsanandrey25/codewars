@@ -1,13 +1,15 @@
 
-Find the odd int https://www.codewars.com/kata/54da5a58ea159efa38000836/train/go
+Playing with digits https://www.codewars.com/kata/5552101f47fc5178b1000050/train/go
 
-Given an array of integers, find the one that appears an odd number of times.
+Some numbers have funny properties. For example:
 
-There will always be only one integer that appears an odd number of times.
+89 --> 8¹ + 9² = 89 * 1
+695 --> 6² + 9³ + 5⁴= 1390 = 695 * 2
+46288 --> 4³ + 6⁴+ 2⁵ + 8⁶ + 8⁷ = 2360688 = 46288 * 51
+Given two positive integers n and p, we want to find a positive integer k, if it exists, such that the sum of the digits of n raised to consecutive powers starting from p is equal to k * n.
 
-Examples
-[7] should return 7, because it occurs 1 time (which is odd).
-[0] should return 0, because it occurs 1 time (which is odd).
-[1,1,2] should return 2, because it occurs 1 time (which is odd).
-[0,1,0,1,0] should return 0, because it occurs 3 times (which is odd).
-[1,2,2,3,3,3,4,3,3,3,2,2,1] should return 4, because it appears 1 time (which is odd).
+In other words, writing the consecutive digits of n as a, b, c, d ..., is there an integer k such that :
+
+If it is the case we will return k, if not return -1.
+
+Note: n and p will always be strictly positive integers.

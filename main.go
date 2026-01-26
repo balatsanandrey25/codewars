@@ -2,34 +2,27 @@ package main
 
 import "fmt"
 
-func FindOdd(seq []int) int {
-	counts := make(map[int]int)
-	// Множество чисел с нечетным количеством
-	oddNumbers := make(map[int]bool)
-
-	for _, num := range seq {
-		counts[num]++
-		if counts[num]%2 != 0 {
-			oddNumbers[num] = true
-		} else {
-			delete(oddNumbers, num)
-		}
+func DigPow(n, p int) int {
+	// your code (ap+bp+1+cp+2+dp+3+...)=n∗k
+	str := fmt.Sprintf("%d", n)
+	result := 0.0
+	for i, char := range str {
+		result += float64(powInt(int(char-'0'), p+i))
 	}
-
-	// Найти максимум в oddNumbers
-	maxOdd := -1
-	for num := range oddNumbers {
-		if num > maxOdd {
-			maxOdd = num
-		}
+	k := result / float64(n)
+	if k == float64(int(k)) {
+		return int(k)
+	} else {
+		return -1
 	}
-
-	return maxOdd
 }
-
+func powInt(base, exponent int) int {
+	result := 1
+	for i := 0; i < exponent; i++ {
+		result *= base
+	}
+	return result
+}
 func main() {
-	arr := []int{20, 1, -1, 2, -2, 3, 3, 5, 5, 1, 2, 4, 20, 4, -1, -2, 5, 7, 7, 99}
-	result := FindOdd(arr)
-	fmt.Printf("Максимальное число с нечетным количеством повторений: %d\n", result)
-	FindOdd(arr)
+	fmt.Println(DigPow(46288, 3))
 }
