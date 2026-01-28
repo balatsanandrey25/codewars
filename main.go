@@ -1,16 +1,28 @@
 package main
 
-import "strings"
+import "fmt"
 
-type MyString string
+func topKFrequent(nums []int, k int) []int {
 
-func (s MyString) IsUpperCase() bool {
-	// Your code here!
-	str := string(s)
-
-	return str == strings.ToUpper(str)
-
+	collectionNums := make(map[int]int, len(nums))
+	var resultNums []int
+	for _, v := range nums {
+		collectionNums[v] += 1
+	}
+	for v, key := range collectionNums {
+		if key >= k {
+			resultNums = append(resultNums, v)
+		}
+	}
+	if resultNums != nil {
+		return resultNums
+	} else {
+		return nums
+	}
 }
-func main() {
 
+func main() {
+	nums := []int{1, 2, 2, 3, 3, 3}
+	k := 2
+	fmt.Println(topKFrequent(nums, k))
 }
